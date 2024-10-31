@@ -30,16 +30,16 @@ def WinCheck(mainBoard):
     #row check
     for row in mainBoard:
         if row == ['X', 'X', 'X']:
-            return 'User'
-        if row == ['O', 'O', 'O']:
             return 'Computer'
+        if row == ['O', 'O', 'O']:
+            return 'Uesr'
     #column check
     for i in range(3):
         col = [mainBoard[0][i], mainBoard[1][i], mainBoard[2][i]]
         if col == ['X', 'X', 'X']:
-            return 'User'
+            return 'Computer'
         if col == ['O', 'O', 'O']:
-            return 'Computer' 
+            return 'User' 
     #diagnoal check
     diagonal_1 = [mainBoard[0][0], mainBoard[1][1], mainBoard[2][2]]
     if diagonal_1 == ['X', 'X', 'X']:
