@@ -24,18 +24,14 @@ def Display_Board(mainBoard):
     print(BoardCover)
 
 def TieCheck(mainBoard):
-    for i in range(3):
-        for j in range(3):
-            if type(mainBoard[i][j]) == 'int':
-                return False
-    return True
+    return all(isinstance(cell, str) for row in mainBoard for cell in row)
 
 def WinCheck(mainBoard):
     #row check
-    for i in range(3):
-        if mainBoard[i] == ['X', 'X', 'X']:
+    for row in mainBoard:
+        if row == ['X', 'X', 'X']:
             return 'User'
-        if mainBoard[i] == ['O', 'O', 'O']:
+        if row == ['O', 'O', 'O']:
             return 'Computer'
     #column check
     for i in range(3):
@@ -47,53 +43,59 @@ def WinCheck(mainBoard):
     #diagnoal check
     diagonal_1 = [mainBoard[0][0], mainBoard[1][1], mainBoard[2][2]]
     if diagonal_1 == ['X', 'X', 'X']:
-        return 'User'
-    if diagonal_1 == ['O', 'O', 'O']:
         return 'Computer'
+    if diagonal_1 == ['O', 'O', 'O']:
+        return 'User'
         
     diagonal_2 = [mainBoard[0][2], mainBoard[1][1], mainBoard[2][0]]
     if diagonal_2 == ['X', 'X', 'X']:
-        return 'User'
+        return 'Computer'
     if diagonal_2 == ['O', 'O', 'O']:
-        return 'Computer'  
+        return 'User'  
     return None
+
+#get user move
+def get_user_move():
+    while True:
+        try:
+            UserMove = int(input("Enter your move: "))
+            if UserMove in range(1, 10):
+                return UserMove
+            else:
+                print("The number must be between 1 and 9.")
+        except ValueError:
+            print("Please Enter a Valid input (integer only)!")
+
+#get Computer move
+def computer_move():
+    while True:
+        ComputerMove = randint(1, 9)  # Correct range
+        if findIndex(mainBoard, ComputerMove) is not None:
+            return ComputerMove
    
 # Display_Board(mainBoard)
 mainBoard[1][1] = 'X'
 Display_Board(mainBoard)
 while True:
-    try:
-        UserMove = int(input("Enter your move: "))
-    except:
-        print("Please Enter a Valid input (integer only)!")
-    if UserMove not in range(1, 10):
-        print("The number must be between 1 and 9")
-    elif findIndex(mainBoard, UserMove) == None:
+    UserMove = get_user_move()
+    if findIndex(mainBoard, UserMove) is None:
         print("The chosen place is occupied!")
-    else:
-        row_index, col_index = findIndex(mainBoard, UserMove)
-        mainBoard[row_index][col_index] = 'O'
-        Display_Board(mainBoard)
+        continue
+    row_index, col_index = findIndex(mainBoard, UserMove)
+    mainBoard[row_index][col_index] = 'O'
+
+    Display_Board(mainBoard)
     if WinCheck(mainBoard) == 'User':
         print("You Won!")
-        break
-    if WinCheck(mainBoard) == 'Computer':
-        print("Computer Won!")
         break
     if TieCheck(mainBoard):
         print('It is a Tie!')
         break
 
-    while True:
-        ComputerMove = randint(1, 10)
-        if findIndex(mainBoard, ComputerMove) != None:
-            break
+    ComputerMove = computer_move()
     row_index, col_index = findIndex(mainBoard, ComputerMove)
-    mainBoard[row_index][col_index] = ComputerMove
+    mainBoard[row_index][col_index] = 'X'
 
-    if WinCheck(mainBoard) == 'User':
-        print("You Won!")
-        break
     if WinCheck(mainBoard) == 'Computer':
         print("Computer Won!")
         break
